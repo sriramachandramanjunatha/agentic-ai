@@ -41,8 +41,8 @@ def initialize():
 
 
 def run():
-   logger.info("Starting Educosys Claude")
-   console.print("\n[bold blue]Educosys Claude[/bold blue] — RAG-powered code assistant")
+   logger.info("Starting Claude")
+   console.print("\n[bold blue]Claude[/bold blue] — RAG-powered code assistant")
 
 
    llm, embedder, index = initialize()
@@ -59,8 +59,8 @@ def run():
            logger.info("Shutting down")
            console.print("[dim]Goodbye![/dim]")
            break
-       elif user_input.startswith("/ask ") or user_input.startswith(""):
-           question = user_input.removeprefix("/ask ").strip() or user_input.strip()
+       elif user_input.startswith("/ask ") or user_input.startswith("/a"):
+           question = user_input.removeprefix("/ask ").strip() or user_input.removeprefix("/a ").strip()
            logger.info(f"Ask command received: {question}")
            console.print(f"[dim]Searching for: {question}...[/dim]")
            confirm = Prompt.ask("Are you sure you want to ask this question? (y/n)", default="y")
