@@ -1,12 +1,5 @@
 import os
 from pathlib import Path
-
-# Use the OS trust store so TLS works behind the corporate SSL-inspecting proxy.
-# Must run before any HTTPS client builds its SSL context.
-import truststore
-
-truststore.inject_into_ssl()
-
 from dotenv import load_dotenv
 from rich.console import Console
 from rich.prompt import Prompt
@@ -48,8 +41,8 @@ def initialize():
 
 
 def run():
-   logger.info("Starting Claude")
-   console.print("\n[bold blue]Claude[/bold blue] — RAG-powered code assistant")
+   logger.info("Starting Educosys Claude")
+   console.print("\n[bold blue]Educosys Claude[/bold blue] — RAG-powered code assistant")
 
 
    llm, embedder, index = initialize()
@@ -62,16 +55,20 @@ def run():
 
        if not user_input.strip():
            continue
-       if user_input.lower() in ("/exit", "/quit"):
+       if user_input.lower() in ("/q", "/exit", "/quit"):
            logger.info("Shutting down")
            console.print("[dim]Goodbye![/dim]")
            break
-       elif user_input.startswith("/ask "):
-           question = user_input.removeprefix("/ask ").strip()
+       elif user_input.startswith("/ask ") or user_input.startswith(""):
+           question = user_input.removeprefix("/ask ").strip() or user_input.strip()
            logger.info(f"Ask command received: {question}")
            console.print(f"[dim]Searching for: {question}...[/dim]")
-           response = handle_query(question)
-           console.print(response)
+           confirm = Prompt.ask("Are you sure you want to ask this question? (y/n)", default="y")
+           if confirm.lower() == "y":
+               response = handle_query(question)
+               console.print(response)
+           else:
+               console.print("[yellow]Question cancelled.[/yellow]")
        elif user_input == "/show_semantic_index":
            logger.info("Showing semantic index")
            get_index_inspector()(index)

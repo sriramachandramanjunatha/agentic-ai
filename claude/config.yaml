@@ -11,7 +11,7 @@ chromadb:
  collection_name: codebase
 
 vector_store:
- provider: qdrant
+ provider: chromadb
 
 
 qdrant:
