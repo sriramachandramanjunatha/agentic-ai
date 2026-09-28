@@ -4,8 +4,18 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from claude.llm.factory import get_llm
 from claude.agent.tools import search_codebase
-from claude.memory.short_term import get_checkpointer
+from claude.memory.short_term import get_checkpointer, get_summarization_middleware
 from claude.observability.logger import get_logger
+from claude.tools.terminal_tools import run_command, run_in_directory
+from claude.tools.filesystem_tools import (
+   read_file,
+   write_file,
+   append_file,
+   delete_file,
+   list_directory,
+   file_exists,
+)
+
 
 
 logger = get_logger(__name__)
@@ -20,8 +30,9 @@ If you cannot find the answer in the codebase, say so explicitly."""
 def build_agent():
    """Create and return a LangChain agent with persistent memory."""
    llm = get_llm()
-   tools = [search_codebase]
+   tools = [search_codebase, run_command, run_in_directory, read_file, write_file, append_file, delete_file, list_directory, file_exists]
    checkpointer = get_checkpointer()
+   middleware = get_summarization_middleware()
 
 
    return create_agent(
@@ -29,4 +40,5 @@ def build_agent():
        tools=tools,
        system_prompt=SYSTEM_PROMPT,
        checkpointer=checkpointer,
+       middleware=[middleware],
    )
