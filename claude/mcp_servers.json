@@ -8,6 +8,15 @@
         },
         "transport": "stdio"
       }
-    }
+    },
+    "filesystem": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@modelcontextprotocol/server-filesystem",
+          "${CWD}"
+        ],
+        "transport": "stdio"
+      } 
    }
    

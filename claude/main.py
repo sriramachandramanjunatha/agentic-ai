@@ -52,8 +52,8 @@ async def initialize(checkpointer):
 
 
 async def _run_async():
-   logger.info("Starting Educosys Claude")
-   console.print("\n[bold blue]Educosys Claude[/bold blue] — RAG-powered code assistant")
+   logger.info("Starting Claude")
+   console.print("\n[bold blue]Claude[/bold blue] — RAG-powered code assistant")
 
 
    async with AsyncSqliteSaver.from_conn_string(get_checkpointer_db_path()) as checkpointer:
