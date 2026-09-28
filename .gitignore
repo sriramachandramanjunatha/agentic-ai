@@ -20,3 +20,5 @@ poetry.lock
 .venv/
 venv/
 claude/.venv/
+
+.memory/

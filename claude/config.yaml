@@ -1,3 +1,6 @@
+memory:
+ db_path: .memory/memory.db
+
 rag:
  mode: hybrid           # semantic | hybrid
 
