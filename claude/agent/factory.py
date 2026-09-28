@@ -4,7 +4,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
 from claude.llm.factory import get_llm
 from claude.agent.tools import search_codebase
-from claude.memory.short_term import get_checkpointer, get_summarization_middleware
+from claude.memory.short_term import get_summarization_middleware
 from claude.observability.logger import get_logger
 from claude.tools.terminal_tools import run_command, run_in_directory
 from claude.tools.filesystem_tools import (
@@ -15,6 +15,7 @@ from claude.tools.filesystem_tools import (
    list_directory,
    file_exists,
 )
+from claude.mcp.mcp_client import get_mcp_tools
 
 
 
@@ -27,11 +28,23 @@ Reference specific file names, function names and line numbers in your answers.
 If you cannot find the answer in the codebase, say so explicitly."""
 
 
-def build_agent():
+async def build_agent(checkpointer):
    """Create and return a LangChain agent with persistent memory."""
    llm = get_llm()
-   tools = [search_codebase, run_command, run_in_directory, read_file, write_file, append_file, delete_file, list_directory, file_exists]
-   checkpointer = get_checkpointer()
+   mcp_tools = await get_mcp_tools()
+   logger.info(f"Loaded {len(mcp_tools)} MCP tools")
+   tools = [
+      search_codebase, 
+      run_command, 
+      run_in_directory, 
+      read_file, 
+      write_file, 
+      append_file, 
+      delete_file, 
+      list_directory, 
+      file_exists,
+      *mcp_tools
+   ]
    middleware = get_summarization_middleware()
 
 
